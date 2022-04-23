@@ -36,15 +36,17 @@ use crate::{NeocitiesClient, NeocitiesError};
 /// A struct containing the file list of the site, parsed into native (non-JSON) datatypes.
 /// Items are not stored recursively, but instead as one big list.
 /// 
+/// To make usage easier, `SiteInfo` takes ownership of the client. The field is public, so you can still call methods on it.
+/// 
 /// Under the hood, this just calls `client.list_all()` and parses the returned JSON data into easier-to-use solid types.
 /// All paths begin with `/`, so make sure you take account of that when checking for files.
-pub struct SiteInfo<'a> {
-    client: &'a NeocitiesClient,
+pub struct SiteInfo {
+    pub client: NeocitiesClient,
     /// All the files and directories on the site
     pub items: Vec<SiteItem>
 }
 impl SiteInfo<'_> {
-    /// Create a new `SiteInfo` corresponding to an existing client. It will contain info about the auth user's site.
+    /// Create a new `SiteInfo` using an existing client. It will contain info about the auth user's site.
     /// 
     /// Returns an error if the HTTP request fails or if the API call somehow returns malformed or invalid JSON.
     pub fn new(client: &NeocitiesClient) -> Result<SiteInfo, NeocitiesError> {
@@ -115,9 +117,17 @@ impl SiteInfo<'_> {
     }
 }
 
-fn hash_of_local(path: impl AsRef<Path>) -> Result<String, io::Error> {
+/// Get the sha1 hash of a local file. Returns an error if the file fails to open.
+pub fn hash_of_local(path: impl AsRef<Path>) -> Result<String, io::Error> {
+    Ok(hash_of_bytes(path.read()?))
+}
+pub fn hash_of_string(s: impl AsRef<str>) -> String {
+    hash_of_bytes(s.as_ref().as_bytes())
+}
+/// Get the sha1 hash of a set of bytes.
+pub fn hash_of_bytes(bytes: impl AsRef<[u8]>) -> String {
     let mut hasher = Sha1::new();
-    hasher.update(read(path)?);
+    hasher.update(bytes);
     let arr = hasher.finalize();
     let mut ret = String::new();
     for b in arr {
