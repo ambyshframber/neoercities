@@ -45,7 +45,7 @@ pub struct SiteInfo {
     /// All the files and directories on the site
     pub items: Vec<SiteItem>
 }
-impl SiteInfo<'_> {
+impl SiteInfo {
     /// Create a new `SiteInfo` using an existing client. It will contain info about the auth user's site.
     /// 
     /// Returns an error if the HTTP request fails or if the API call somehow returns malformed or invalid JSON.
