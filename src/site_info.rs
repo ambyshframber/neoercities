@@ -133,7 +133,7 @@ pub fn hash_of_bytes(bytes: impl AsRef<[u8]>) -> String {
     for b in arr {
         ret.push_str(&format!("{:01x}", b))
     }
-    Ok(ret)
+    ret
 }
 
 /// Represents a file on the site
