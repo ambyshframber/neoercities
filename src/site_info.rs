@@ -119,7 +119,7 @@ impl SiteInfo {
 
 /// Get the sha1 hash of a local file. Returns an error if the file fails to open.
 pub fn hash_of_local(path: impl AsRef<Path>) -> Result<String, io::Error> {
-    Ok(hash_of_bytes(path.read()?))
+    Ok(hash_of_bytes(read(path)?))
 }
 pub fn hash_of_string(s: impl AsRef<str>) -> String {
     hash_of_bytes(s.as_ref().as_bytes())
