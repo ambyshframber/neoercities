@@ -110,9 +110,19 @@ impl SiteInfo {
     pub fn file_changed(&self, local_path: impl AsRef<Path>, remote_path: &str) -> Result<bool, NeocitiesError> {
         match self.get_file(remote_path) {
             Some(f) => {
-                Ok(hash_of_local(local_path)? == f.sha1_hash)
+                Ok(hash_of_local(local_path)? != f.sha1_hash)
             }
             None => Ok(true)
+        }
+    }
+    /// As above, but with a local byte sequence instead of a file.
+    /// Returns `true` if the remote file doesn't exist.
+    pub fn bytes_changed(&self, bytes: impl AsRef<[u8]>, remote_path: &str) -> bool {
+        match self.get_file(remote_path) {
+            Some(f) => {
+                hash_of_bytes(bytes) != f.sha1_hash
+            }
+            None => true
         }
     }
 }
@@ -121,6 +131,7 @@ impl SiteInfo {
 pub fn hash_of_local(path: impl AsRef<Path>) -> Result<String, io::Error> {
     Ok(hash_of_bytes(read(path)?))
 }
+/// Get the sha1 hash of a string.
 pub fn hash_of_string(s: impl AsRef<str>) -> String {
     hash_of_bytes(s.as_ref().as_bytes())
 }

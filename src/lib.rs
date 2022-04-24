@@ -37,7 +37,7 @@ pub mod site_info;
 /// Clients without authentication can only use `info_no_auth()`,
 /// and all other methods will return an error.
 /// 
-/// All methods except `get_key()` should return valid JSON.
+/// All methods should return valid JSON.
 /// Check beforehand though, because something might go wrong at the remote end.
 pub struct NeocitiesClient {
     client: Client,
