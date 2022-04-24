@@ -49,7 +49,7 @@ impl SiteInfo {
     /// Create a new `SiteInfo` using an existing client. It will contain info about the auth user's site.
     /// 
     /// Returns an error if the HTTP request fails or if the API call somehow returns malformed or invalid JSON.
-    pub fn new(client: &NeocitiesClient) -> Result<SiteInfo, NeocitiesError> {
+    pub fn new(client: NeocitiesClient) -> Result<SiteInfo, NeocitiesError> {
         let mut i = SiteInfo {
             client,
             items:Vec::new()
