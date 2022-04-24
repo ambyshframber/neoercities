@@ -142,7 +142,7 @@ pub fn hash_of_bytes(bytes: impl AsRef<[u8]>) -> String {
     let arr = hasher.finalize();
     let mut ret = String::new();
     for b in arr {
-        ret.push_str(&format!("{:01x}", b))
+        ret.push_str(&format!("{:02x}", b))
     }
     ret
 }
