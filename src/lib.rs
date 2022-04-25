@@ -74,7 +74,7 @@ impl NeocitiesClient {
     /// ```
     /// 
     /// A key can be obtained by creating a client with a username and password,
-    /// and calling `get_key()`. Keep it somewhere secure!
+    /// and calling [`get_key()`]. Keep it somewhere secure!
     pub fn new_with_key(key: &str) -> NeocitiesClient {
         NeocitiesClient {
             client: Client::new(),
@@ -126,7 +126,7 @@ impl NeocitiesClient {
     /// 
     /// Does not error if the site doesn't exist, but the returned value will be an error message from Neocities.
     pub fn info_no_auth(&self, site_name: &str) -> Result<String, NeocitiesError> {
-        let url = format!("https://neocities.org/api/info?sitename={}", site_name);
+        let url = format!("https://neocities.org/api/info?sitename={}", site_name); // doesn't need auth, just send it raw
         Ok(self.client.get(&url).send()?.text()?)
     }
 
@@ -232,11 +232,13 @@ impl NeocitiesClient {
     }
 
     /// Delete a file on the site.
+    /// `path` is from the site root.
     pub fn delete(&self, path: &str) -> Result<String, NeocitiesError> {
         let v = vec![path];
         self.delete_multiple(v)
     }
 
+    /// Delete multiple files.
     pub fn delete_multiple(&self, files: Vec<&str>) -> Result<String, NeocitiesError> {
         let mut req = self.get_auth(self.client.post("https://neocities.org/api/delete"))?;
 

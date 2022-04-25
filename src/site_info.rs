@@ -21,6 +21,7 @@
 //! ```
 //! 
 //! The [`SiteInfo`] struct also provides more general methods for getting files and directories on the site.
+//! There's also a few functions for getting hashes in the same format neocities provides them.
 
 use std::path::Path;
 use std::io;
@@ -65,7 +66,7 @@ impl SiteInfo {
 
         let mut items = Vec::new(); // clear local cache
         for entry in list.get("files").unwrap().as_array().unwrap() { // go through list and parse
-            items.push(SiteItem::from_json(entry)?) // don't bother with error checking cuz unless neocities have a problem we should be fine
+            items.push(SiteItem::from_json(entry)?)
         }
         self.items = items;
 
@@ -96,6 +97,9 @@ impl SiteInfo {
         }
     }
 
+    pub fn item_exists_on_site(&self, path: &str) -> bool {
+        self.get_item(path).is_some()
+    }
     pub fn file_exists_on_site(&self, path: &str) -> bool {
         self.get_file(path).is_some()
     }
