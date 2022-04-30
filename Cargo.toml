@@ -2,14 +2,21 @@
 name = "neoercities"
 version = "0.1.0"
 edition = "2021"
+authors = ["amber lastname"]
+license = "MIT"
+repository = "https://github.com/ambyshframber/neoercities"
+description = "another neocities API wrapper"
+categories = ["api-bindings"]
+tags = ["api", "neocities"]
+
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 reqwest = { version = "0.11.10", features = ["blocking", "multipart"] }
-serde_json = { version = "1.0.59", optional = true }
 chrono = "0.4"
 thiserror = "1.0.30"
+serde_json = { version = "1.0.59", optional = true }
 sha-1 = { version = "0.10.0", optional = true }
 
 [features]

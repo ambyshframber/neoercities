@@ -41,6 +41,7 @@ use crate::{NeocitiesClient, NeocitiesError};
 /// 
 /// Under the hood, this just calls `client.list_all()` and parses the returned JSON data into easier-to-use solid types.
 /// All paths begin with `/`, so make sure you take account of that when checking for files.
+#[derive(Debug)]
 pub struct SiteInfo {
     pub client: NeocitiesClient,
     /// All the files and directories on the site
@@ -131,7 +132,9 @@ impl SiteInfo {
     }
 }
 
-/// Get the sha1 hash of a local file. Returns an error if the file fails to open.
+/// Get the sha1 hash of a local file, as a string. Returns an error if the file fails to open.
+/// A string is used because that's how Neocities provide their hashes, and it's easier to compare
+/// strings than to convert stuff into a big integer type.
 pub fn hash_of_local(path: impl AsRef<Path>) -> Result<String, io::Error> {
     Ok(hash_of_bytes(read(path)?))
 }
@@ -152,6 +155,7 @@ pub fn hash_of_bytes(bytes: impl AsRef<[u8]>) -> String {
 }
 
 /// Represents a file on the site
+#[derive(Debug)]
 pub struct File {
     /// Path of the file, from root (eg /index.html)
     pub path: String,
@@ -173,6 +177,7 @@ impl File {
     }
 }
 /// Represents a directory on the site.
+#[derive(Debug)]
 pub struct Dir {
     /// Path of the directory, from root (eg /blog)
     pub path: String,
@@ -189,6 +194,7 @@ impl Dir {
 }
 
 /// Represents an item on the site.
+#[derive(Debug)]
 pub enum SiteItem {
     File(File),
     Dir(Dir)
@@ -201,7 +207,7 @@ impl SiteItem {
         }
     }
     fn from_json(j: &Value) -> Result<SiteItem, NeocitiesError> {
-        Ok(if j.get("is_directory").unwrap().as_bool().unwrap() {
+        Ok(if j.get("is_directory").ok_or(NeocitiesError::ListParseError)?.as_bool().ok_or(NeocitiesError::ListParseError)? {
             SiteItem::Dir(Dir::from_json(j)?)
         }
         else {

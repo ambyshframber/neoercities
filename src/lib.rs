@@ -39,6 +39,7 @@ pub mod site_info;
 /// 
 /// All methods should return valid JSON.
 /// Check beforehand though, because something might go wrong at the remote end.
+#[derive(Debug)]
 pub struct NeocitiesClient {
     client: Client,
     has_auth: bool,
@@ -68,13 +69,13 @@ impl NeocitiesClient {
     /// ```no_run
     /// # use rs_neocities::client::NeocitiesClient;
     /// # use std::fs;
-    /// let key = fs::read_to_string("auth_key.txt").unwrap();
+    /// let key = fs::read_to_string("auth_key.txt")?;
     /// let c = NeocitiesClient::new_with_key(&key);
     /// assert!(c.info().is_ok());
     /// ```
     /// 
     /// A key can be obtained by creating a client with a username and password,
-    /// and calling [`get_key()`]. Keep it somewhere secure!
+    /// and calling `get_key()`. Keep it somewhere secure!
     pub fn new_with_key(key: &str) -> NeocitiesClient {
         NeocitiesClient {
             client: Client::new(),
