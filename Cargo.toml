@@ -1,6 +1,6 @@
 [package]
 name = "neoercities"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["amber lastname"]
 license = "MIT"
@@ -26,3 +26,8 @@ chrono = "0.4"
 default = []
 
 site_info = ["serde_json", "sha-1", "chrono"]
+
+[package.metadata.docs.rs]
+
+# Whether to pass `--all-features` to Cargo (default: false)
+all-features = true
